@@ -15,6 +15,12 @@ symbol_count = {
     "D": 8
 }
 
+def type_effect(message, second,end="", flush=True):
+    for char in message:
+        time.sleep(second)
+        print(char, end=end, flush=flush)
+    #print()
+
 def get_slot_machine_spin(rows, cols, symbols):
     all_symbols = []
     for symbol, symbol_count in symbols.items(): #.items() gives key : value pair in dictionary
@@ -38,9 +44,9 @@ def print_slot_machine(columns):
     for row in range(len(columns[0])): # need at least one columns, otherwise breakout
         for i, column in enumerate(columns): # enumerate gives index and value
             if i != len(columns) - 1:
-                print(column[row], end="|")
+                type_effect(column[row], second=1,end="|")
             else:
-                print(column[row], end="")
+                type_effect(column[row], second=1)
         print()
 
 def deposit():
@@ -82,11 +88,7 @@ def get_bet():
             print("Please enter a number.")
     return amount
 
-def type_effect(message):
-    for char in message:
-        time.sleep(0.03)
-        print(char, end="", flush=True)
-    print()
+
 
 def main():
     balance = deposit()
@@ -96,12 +98,12 @@ def main():
         total_bet = bet * lines
         
         if total_bet > balance:
-            message = f">>You do not have enough to bet on that amount, your current balance is: ${balance}\n>>You need another ${total_bet - balance} to be able to bet on that amount "
-            type_effect(message)
+            message = f">>You do not have enough to bet on that amount, your current balance is: ${balance}\n>>You need another ${total_bet - balance} to be able to bet on that amount \n"
+            type_effect(message, second=0.03)
         else:
             break
-    message = f">>You are betting ${bet} on {lines} lines with the balance of ${balance}.\n>>Total bet is equal to ${total_bet}"
-    type_effect(message)
+    message = f">>You are betting ${bet} on {lines} lines with the balance of ${balance}.\n>>Total bet is equal to ${total_bet}\n"
+    type_effect(message, second=0.03)
     
     slots = get_slot_machine_spin(ROWS, COLS, symbol_count)
     print_slot_machine(slots)
