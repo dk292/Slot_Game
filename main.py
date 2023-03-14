@@ -15,11 +15,34 @@ symbol_count = {
     "D": 8
 }
 
+symbol_value = {
+    "A": 5,
+    "B": 4,
+    "C": 3,
+    "D": 2
+}
+
 def type_effect(message, second,end="", flush=True):
     for char in message:
         time.sleep(second)
         print(char, end=end, flush=flush)
     #print()
+
+def check_winnings(columns, lines, bet, values):
+    winning = 0
+    winning_lines = []
+    for line in range(lines):
+        symbol = columns[0][line]
+        for column in columns:
+            symbol_to_check = column[line]
+            if symbol != symbol_to_check:
+                break
+        else:
+                winning += values[symbol] * bet
+                winning_lines.append(line + 1)
+    
+    return winning, winning_lines
+    
 
 def get_slot_machine_spin(rows, cols, symbols):
     all_symbols = []
@@ -44,9 +67,9 @@ def print_slot_machine(columns):
     for row in range(len(columns[0])): # need at least one columns, otherwise breakout
         for i, column in enumerate(columns): # enumerate gives index and value
             if i != len(columns) - 1:
-                type_effect(column[row], second=1,end="|")
+                type_effect(column[row], second=0.7,end="|")
             else:
-                type_effect(column[row], second=1)
+                type_effect(column[row], second=0.7)
         print()
 
 def deposit():
@@ -88,10 +111,7 @@ def get_bet():
             print("Please enter a number.")
     return amount
 
-
-
-def main():
-    balance = deposit()
+def spin(balance):
     lines = get_number_of_lines()
     while True:
         bet = get_bet()
@@ -107,4 +127,20 @@ def main():
     
     slots = get_slot_machine_spin(ROWS, COLS, symbol_count)
     print_slot_machine(slots)
+    winnings, winning_lines = check_winnings(slots, lines, bet, symbol_value)
+    type_effect(f">>You won ${winnings}\n", second=0.03)
+    print(f">>You won on lines: ", *winning_lines)
+    return winnings - total_bet
+
+def main():
+    balance = deposit()
+    while True:
+        type_effect(f"Current balance is ${balance}\n", second=0.05)
+        answer = input("Press Enter to play (q to quit).")
+        if answer == "q":
+            break
+        balance += spin(balance)
+    
+    type_effect(f">>You left with ${balance}\n", second=0.05)
+    
 main()
