@@ -8,7 +8,7 @@ MIN_BET = 1
 ROWS = 3
 COLS = 3
 
-symbols = {
+symbol_count = {
     "A": 2,
     "B": 4,
     "C": 6,
@@ -29,9 +29,19 @@ def get_slot_machine_spin(rows, cols, symbols):
             value = random.choice(current_symbols)
             current_symbols.remove(value)
             column.append(value)
-        columns.append(columns)
+            
+        columns.append(column)
     
     return columns
+
+def print_slot_machine(columns):
+    for row in range(len(columns[0])): # need at least one columns, otherwise breakout
+        for i, column in enumerate(columns): # enumerate gives index and value
+            if i != len(columns) - 1:
+                print(column[row], end="|")
+            else:
+                print(column[row], end="")
+        print()
 
 def deposit():
     while True:
@@ -93,4 +103,6 @@ def main():
     message = f">>You are betting ${bet} on {lines} lines with the balance of ${balance}.\n>>Total bet is equal to ${total_bet}"
     type_effect(message)
     
+    slots = get_slot_machine_spin(ROWS, COLS, symbol_count)
+    print_slot_machine(slots)
 main()
