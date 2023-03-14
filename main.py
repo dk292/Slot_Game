@@ -1,3 +1,5 @@
+import time
+
 MAX_LINES = 3
 MAX_BET = 100
 MIN_BET = 1
@@ -17,7 +19,7 @@ def deposit():
 
 def get_number_of_lines():
     while True:
-        lines = input("Enter the number of lines to bet on (1-" + str(MAX_LINES) + ")?")
+        lines = input("Enter the number of lines to bet on (1-" + str(MAX_LINES) + ")? ")
         if lines.isdigit():
             lines = int(lines)
             if 1 <= lines <= MAX_LINES:
@@ -41,11 +43,25 @@ def get_bet():
             print("Please enter a number.")
     return amount
 
+def type_effect(message):
+    for char in message:
+        time.sleep(0.03)
+        print(char, end="", flush=True)
+    print()
+
 def main():
     balance = deposit()
     lines = get_number_of_lines()
-    bet = get_bet()
-    total_bet = bet * lines
-    print(f"You are betting ${bet} on {lines} lines with the balance of ${balance}.\nTotal bet is equal to ${total_bet}")
+    while True:
+        bet = get_bet()
+        total_bet = bet * lines
+        
+        if total_bet > balance:
+            message = f">>You do not have enough to bet on that amount, your current balance is: ${balance}\n>>You need another ${total_bet - balance} to be able to bet on that amount "
+            type_effect(message)
+        else:
+            break
+    message = f">>You are betting ${bet} on {lines} lines with the balance of ${balance}.\n>>Total bet is equal to ${total_bet}"
+    type_effect(message)
     
 main()
